@@ -28,8 +28,8 @@ jobs:
           servers: |
             [{
                 "id": "github-open-timetrack-api",
-                "username": "${{ secrets.CICD_PAT }}",
-                "password": "${{ secrets.CICD_USERNAME }}"
+                "username": "${{ secrets.CICD_USERNAME }}",
+                "password": "${{ secrets.CICD_PAT }}"
             }]
 
       - name: Configure Git user for maven release plugin
