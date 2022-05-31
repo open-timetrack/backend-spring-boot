@@ -1,0 +1,9 @@
+{
+    "devDependencies": {
+        "semantic-release": "^19.0.2"
+    },
+    "dependencies"   : {
+        "@semantic-release/exec": "github:semantic-release/exec",
+        "@semantic-release/git" : "github:semantic-release/git"
+    }
+}

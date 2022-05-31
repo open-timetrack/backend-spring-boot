@@ -1,7 +1,7 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
-name: Java CI with Maven
+name: Build and test
 
 on:
   push:
@@ -9,9 +9,14 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -20,10 +25,11 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'temurin'
+          distribution: 'corretto'
           cache: maven
 
       - uses: s4u/maven-settings-action@v2.6.0
+        name: Set up maven settings
         with:
           servers: |
             [{
@@ -34,3 +40,14 @@ jobs:
 
       - name: Build with Maven
         run: mvn -B verify --file pom.xml
+
+      - name: Build the Docker image
+        run: docker build . --file Dockerfile --tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:$(date +%s)
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.8.1
+
+      - name: Run chart-testing (lint)
+        run: helm lint charts
