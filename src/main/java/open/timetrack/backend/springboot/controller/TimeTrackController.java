@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 
@@ -19,6 +21,9 @@ public class TimeTrackController implements TimeTrackApi {
     private Map<String, TimeTrack> timeTracks = new HashMap<>();
 
     public ResponseEntity<Void> addNewTimeTrack(@Valid final TimeTrack timeTrack) {
+        while (StringUtils.isBlank(timeTrack.getId()) || timeTracks.containsKey(timeTrack.getId())) {
+            timeTrack.setId(UUID.randomUUID().toString());
+        }
         timeTracks.put(timeTrack.getId(), timeTrack);
         return ResponseEntity.ok(null);
     }
