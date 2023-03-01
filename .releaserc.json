@@ -18,7 +18,7 @@
             "@semantic-release/exec",
             {
                 "verifyReleaseCmd": "mvn -B versions:set -DnewVersion=${nextRelease.version}",
-                "prepareCmd"      : "mvn -B verify",
+                "prepareCmd"      : "mvn -B package",
                 "successCmd"      : "mvn -B versions:set -DnextSnapshot=true"
             }
         ],
